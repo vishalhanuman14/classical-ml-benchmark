@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+\definecolor{bestgray}{gray}{0.8}
+\newcommand{\best}[1]{\cellcolor{bestgray}\textbf{#1}}
+
+\title{COMPSCI 589 -- Final Project\\[0.5em]
+       \large Benchmarking Classical ML Algorithms on Four Datasets}
+\author{Vishal Hanuman \and Akshit [Last Name]}
+\date{May 8, 2026}
+
+\begin{document}
+\maketitle
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section*{Note on Implementations}
+% Clearly state whose code was used for each dataset / algorithm.
+% e.g., "k-NN and Random Forest applied to Datasets 1--2 use
+%         Vishal's implementation from HW1 and HW3 respectively."
+% ─────────────────────────────────────────────────────────────────────────────
+
+All machine learning algorithms were implemented from scratch.
+No machine learning libraries (e.g., scikit-learn, PyTorch) were used for training or prediction.
+\texttt{numpy} and \texttt{matplotlib} were used for numerical computation and plotting.
+\texttt{scikit-learn} was used \emph{only} to load the Digits dataset
+(\texttt{sklearn.datasets.load\_digits}).
+
+\begin{itemize}
+  \item \textbf{Datasets 1--2} (Digits, Parkinson's):
+        k-NN and Random Forest implementations by \textbf{Vishal Hanuman} (HW1, HW3).
+        Gaussian Naive Bayes by \textbf{Vishal Hanuman} (adapted from HW2).
+  \item \textbf{Datasets 3--4} (Rice, Credit Approval):
+        Implementations by \textbf{Akshit [Last Name]} (HW\textit{X}).
+        % TODO: fill in
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Introduction}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The goal of this project is to compare the performance of classical machine learning algorithms
+on four benchmark datasets by evaluating accuracy and F1-score under stratified 10-fold
+cross-validation, with systematic hyperparameter tuning.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Datasets}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{enumerate}
+  \item \textbf{Digits} -- 1,797 instances, 64 numerical features, 10 classes (0--9).
+        Loaded via \texttt{sklearn.datasets.load\_digits}.
+  \item \textbf{Parkinson's Disease} -- 195 instances, 22 numerical features, binary
+        (0 = healthy, 1 = Parkinson's).
+  \item \textbf{Rice Grains} -- 3,810 instances, 7 numerical features, binary
+        (Cammeo vs. Osmancik).
+  \item \textbf{Credit Approval} -- 653 instances, 6 numerical + 9 categorical features,
+        binary (approved vs. not).
+\end{enumerate}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Experiments and Analyses}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Dataset 1 -- Hand-Written Digits}
+
+% TODO: describe algorithm choices and rationale
+
+\subsubsection*{k-NN Hyperparameter Sweep}
+
+% TODO: insert hyperparameter table
+
+\subsubsection*{Random Forest Hyperparameter Sweep}
+
+% TODO: insert hyperparameter table
+
+\subsubsection*{Learning Curves}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/digits_knn_k_sweep.png}
+    \caption{k-NN: Accuracy and F1 vs $k$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/digits_rf_ntree_sweep.png}
+    \caption{Random Forest: Accuracy and F1 vs \textit{ntree}}
+  \end{subfigure}
+  \caption{Learning curves for Dataset 1 (Digits).}
+\end{figure}
+
+% TODO: brief interpretation
+
+% ─────────────────────────────────────────────────────────────────────────────
+\subsection{Dataset 2 -- Parkinson's Disease}
+
+% TODO: same structure as Dataset 1
+
+% ─────────────────────────────────────────────────────────────────────────────
+\subsection{Dataset 3 -- Rice Grains}
+
+% TODO
+
+% ─────────────────────────────────────────────────────────────────────────────
+\subsection{Dataset 4 -- Credit Approval}
+
+% TODO
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Summary of Results}
+% ─────────────────────────────────────────────────────────────────────────────
+
+% Highlight best result per dataset per metric in gray (\best{value})
+
+\begin{table}[H]
+\centering
+\caption{Best performance (Accuracy / F1-Score) per algorithm per dataset.
+  Gray cells indicate the highest value for each metric on each dataset.}
+\small
+\begin{tabular}{l cc cc cc cc}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Digits}} & \multicolumn{2}{c}{\textbf{Parkinson's}}
+ & \multicolumn{2}{c}{\textbf{Rice}} & \multicolumn{2}{c}{\textbf{Credit}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+\textbf{Algorithm} & Acc & F1 & Acc & F1 & Acc & F1 & Acc & F1 \\
+\midrule
+k-NN            & -- & -- & -- & -- & -- & -- & -- & -- \\
+Naive Bayes     & -- & -- & -- & -- & -- & -- & -- & -- \\
+Random Forest   & -- & -- & -- & -- & -- & -- & -- & -- \\
+% Add rows for Akshit's algorithms
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Discussion}
+% ─────────────────────────────────────────────────────────────────────────────
+
+% TODO: discuss why certain algorithms perform better on certain datasets,
+%       convergence behavior, effect of feature types, etc.
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Extra Credit (uncomment and complete if applicable)
+% ─────────────────────────────────────────────────────────────────────────────
+% \section{\textcolor{red}{Extra Credit}}
+% \textcolor{red}{[EC\#X] ...}
+
+\end{document}
