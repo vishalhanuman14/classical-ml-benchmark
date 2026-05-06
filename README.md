@@ -2,7 +2,7 @@
 
 Benchmarking from-scratch ML algorithm implementations across four datasets as part of COMPSCI 589 (Machine Learning) at UMass Amherst.
 
-**No ML libraries used for training or inference.** The algorithm implementations are from scratch. `numpy` is used for numerical work, `matplotlib` for plots, `pandas` for CSV loading, and `scikit-learn` only for loading the Digits dataset.
+**No ML libraries used for training or inference.** The algorithm implementations are from scratch. `numpy` is used for numerical work, `matplotlib` for plots, `pandas` for CSV loading, and `scikit-learn` only for dataset loading.
 
 ## Datasets
 
@@ -52,6 +52,7 @@ Each notebook auto-detects Colab and clones this repo. Just open any notebook vi
 | 02 – Parkinson's | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vishalhanuman14/classical-ml-benchmark/blob/main/notebooks/02_parkinsons.ipynb) |
 | 03 – Rice | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vishalhanuman14/classical-ml-benchmark/blob/main/notebooks/03_rice.ipynb) |
 | 04 – Credit | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vishalhanuman14/classical-ml-benchmark/blob/main/notebooks/04_credit.ipynb) |
+| **EC#2** – Olivetti Faces | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vishalhanuman14/classical-ml-benchmark/blob/main/notebooks/05_olivetti_ec2.ipynb) |
 
 ### Saving work back from Colab
 
@@ -82,6 +83,7 @@ Vishal-owned notebooks:
 
 - `notebooks/01_digits.ipynb`
 - `notebooks/02_parkinsons.ipynb`
+- `notebooks/05_olivetti_ec2.ipynb` *(Extra Credit #2 — image classification)*
 
 ## Evaluation Protocol
 

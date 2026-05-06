@@ -31,8 +31,8 @@
 All machine learning algorithms were implemented from scratch.
 No machine learning libraries (e.g., scikit-learn, PyTorch) were used for training or prediction.
 \texttt{numpy} and \texttt{matplotlib} were used for numerical computation and plotting.
-\texttt{scikit-learn} was used \emph{only} to load the Digits dataset
-(\texttt{sklearn.datasets.load\_digits}).
+\texttt{scikit-learn} was used \emph{only} for dataset loading, not for training
+or prediction.
 
 \begin{itemize}
   \item \textbf{Datasets 1--2} (Digits, Parkinson's):
@@ -392,9 +392,64 @@ which is consistent with correlated biomedical voice measurements violating the 
 conditional-independence assumption.
 
 % ─────────────────────────────────────────────────────────────────────────────
-% Extra Credit (uncomment and complete if applicable)
+\section{\textcolor{red}{Extra Credit}}
 % ─────────────────────────────────────────────────────────────────────────────
-% \section{\textcolor{red}{Extra Credit}}
-% \textcolor{red}{[EC\#X] ...}
+
+\subsection*{\textcolor{red}{[EC\#2] Image Classification on Olivetti Faces}}
+
+\textcolor{red}{To satisfy the EC\#2 criterion of selecting a new \emph{challenging}
+dataset, I evaluated my k-NN (HW1) and Neural Network (HW4) implementations on the
+\textbf{Olivetti Faces} dataset --- 400 grayscale 64x64 images of 40 distinct subjects
+(10 images per subject), loaded with a \texttt{scikit-learn} dataset fetcher.
+This is an image classification task with 40 classes, far more than any of the four
+main project datasets. The full notebook is at
+\texttt{notebooks/05\_olivetti\_ec2.ipynb}.}
+
+\textcolor{red}{Random Forest was omitted because the from-scratch implementation is too
+slow with 4096 pixel features. k-NN and Neural Network are also strong face-recognition
+baselines.}
+
+\begin{table}[H]
+\centering
+\caption{Olivetti Faces (EC\#2): best result per algorithm, stratified 10-fold CV.}
+\begin{tabular}{lccc}
+\toprule
+Algorithm & Best Hyperparameter & Accuracy & Macro F1 \\
+\midrule
+k-NN           & $k=1$ & \best{0.9575} & \best{0.9442} \\
+Neural Network & \texttt{(128, 64)}, $\lambda=0.0$ & 0.8350 & 0.8011 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{olivetti_knn_k_sweep.png}
+    \caption{k-NN: Accuracy and F1 vs $k$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{olivetti_nn_config_sweep.png}
+    \caption{Neural Network: Accuracy and F1 by configuration}
+  \end{subfigure}
+  \caption{Olivetti Faces (EC\#2): hyperparameter sweeps.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{olivetti_nn_learning_curve.png}
+  \caption{Olivetti Faces (EC\#2): NN learning curve.}
+\end{figure}
+
+\textcolor{red}{The Olivetti results support the extra-credit motivation: this is a
+small but difficult 40-class image-classification task. k-NN achieved the best result,
+with $k=1$ reaching 0.9575 accuracy and 0.9442 macro F1. Performance decreased as $k$
+increased, which suggests that each subject's nearest images are highly informative but
+larger neighborhoods begin mixing other identities. The Neural Network also learned a
+useful classifier, with its best architecture reaching 0.8350 accuracy and 0.8011 macro
+F1, but it was weaker than k-NN. This is expected because the dataset has only 400 images
+and 40 classes, so the network has limited data for learning a stable face representation
+from 4096 pixel-level inputs.}
 
 \end{document}
