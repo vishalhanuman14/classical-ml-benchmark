@@ -15,7 +15,7 @@
 
 \title{COMPSCI 589 -- Final Project\\[0.5em]
        \large Benchmarking Classical ML Algorithms on Four Datasets}
-\author{Vishal Hanuman \and Akshit [Last Name]}
+\author{Vishal Hanuman \and Akshit}
 \date{May 8, 2026}
 
 \begin{document}
@@ -39,7 +39,10 @@ or prediction.
         k-NN, Gaussian Naive Bayes, Random Forest, and Neural Network implementations
         by \textbf{Vishal Hanuman} (HW1--HW4).
   \item \textbf{Datasets 3--4} (Rice, Credit Approval):
-        Implementations by \textbf{Akshit [Last Name]} (HW\textit{X}).
+        Experiments by \textbf{Akshit}. Rice uses k-NN and Decision Tree implementations
+        from Akshit's homework code. Credit Approval uses Akshit's Decision Tree and
+        Random Forest implementations, with the shared HW4 Neural Network used for the
+        additional neural-network comparison.
 \end{itemize}
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -71,7 +74,7 @@ cross-validation, with systematic hyperparameter tuning.
 
 \subsection{Dataset 1 -- Hand-Written Digits}
 
-For the Digits dataset, I evaluated k-NN, Random Forest, and a Neural Network.
+For the Digits dataset, we evaluated k-NN, Random Forest, and a Neural Network.
 All features are numerical pixel intensities, so no feature encoding was required.
 k-NN is a natural baseline because digits with similar pixel layouts should be close in
 the normalized feature space. Random Forests were tested because they can learn nonlinear
@@ -190,7 +193,7 @@ classifier on this dataset.
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 2 -- Parkinson's Disease}
 
-For the Parkinson's dataset, I evaluated k-NN, Gaussian Naive Bayes, Random Forest, and a
+For the Parkinson's dataset, we evaluated k-NN, Gaussian Naive Bayes, Random Forest, and a
 Neural Network. The dataset contains 22 numerical voice-measurement features and a binary
 target variable, \texttt{Diagnosis}. k-NN tests whether nearby voice measurements identify
 similar diagnoses. Naive Bayes provides a simple probabilistic baseline, Random Forests
@@ -335,12 +338,164 @@ the training procedure is stochastic.
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 3 -- Rice Grains}
 
-To be completed by Akshit.
+For the Rice Grains dataset, we evaluated k-NN and a Decision Tree. The dataset has
+3,810 examples with seven numerical shape descriptors and a binary label
+(\texttt{Cammeo} or \texttt{Osmancik}). Since all features are numerical, k-NN can use
+normalized distances directly. The Decision Tree provides a comparison based on learned
+feature-threshold rules. We used stratified 10-fold cross-validation and reported
+accuracy and F1-score.
+
+\subsubsection*{k-NN Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Rice: k-NN performance for different values of $k$.}
+\begin{tabular}{rcc}
+\toprule
+$k$ & Accuracy & F1 \\
+\midrule
+1  & 0.8853 & 0.8994 \\
+3  & 0.9118 & 0.9229 \\
+5  & 0.9215 & 0.9315 \\
+7  & 0.9236 & 0.9333 \\
+9  & 0.9239 & 0.9336 \\
+11 & \best{0.9249} & \best{0.9345} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Decision Tree Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Rice: Decision Tree performance for different maximum depths.}
+\begin{tabular}{rcc}
+\toprule
+Max depth & Accuracy & F1 \\
+\midrule
+2  & \best{0.9247} & \best{0.9337} \\
+4  & 0.9231 & 0.9329 \\
+6  & 0.9134 & 0.9246 \\
+8  & 0.9108 & 0.9221 \\
+10 & 0.9052 & 0.9175 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Learning Curves}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{rice_knn_dt_sweep.png}
+  \caption{Rice: k-NN and Decision Tree hyperparameter sweeps.}
+\end{figure}
+
+Both methods performed strongly on Rice. k-NN with $k=11$ achieved the best overall
+result, with 0.9249 accuracy and 0.9345 F1. The steady improvement from $k=1$ through
+$k=11$ suggests that local neighborhoods are helpful, but the dataset benefits from some
+smoothing instead of relying on a single nearest neighbor. The Decision Tree was almost
+as strong at depth 2, with 0.9247 accuracy and 0.9337 F1. Deeper trees performed worse,
+which suggests that a small number of shape-feature thresholds captures most of the useful
+class separation and that additional depth begins to fit fold-specific noise.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 4 -- Credit Approval}
 
-To be completed by Akshit.
+For the Credit Approval dataset, we evaluated Decision Tree, Random Forest, and Neural
+Network models. This dataset is different from the first three because it mixes numerical
+and categorical attributes. The categorical variables were converted into one-hot features
+before model training, while numerical variables were kept as continuous values. We again
+used stratified 10-fold cross-validation and compared accuracy and F1-score.
+
+\subsubsection*{Decision Tree Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Credit Approval: Decision Tree performance for different maximum depths.}
+\begin{tabular}{rcc}
+\toprule
+Max depth & Accuracy & F1 \\
+\midrule
+2  & \best{0.8636} & \best{0.8627} \\
+4  & 0.8255 & 0.8152 \\
+6  & 0.8317 & 0.8110 \\
+8  & 0.8318 & 0.8161 \\
+10 & 0.8181 & 0.7989 \\
+15 & 0.8148 & 0.7962 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Random Forest Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Credit Approval: Random Forest performance for different values of \textit{ntree}.}
+\begin{tabular}{rcc}
+\toprule
+\textit{ntree} & Accuracy & F1 \\
+\midrule
+1  & 0.8086 & 0.7852 \\
+5  & 0.8547 & 0.8393 \\
+10 & 0.8698 & 0.8586 \\
+20 & 0.8650 & 0.8551 \\
+30 & \best{0.8728} & \best{0.8637} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Neural Network Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Credit Approval: Neural Network performance for selected architectures and regularization values.}
+\begin{tabular}{lccc}
+\toprule
+Hidden layers & $\lambda$ & Accuracy & F1 \\
+\midrule
+\texttt{(8,)}    & 0.0 & 0.8608 & 0.8456 \\
+\texttt{(16,)}   & 0.0 & 0.8484 & 0.8313 \\
+\texttt{(8, 4)}  & 0.0 & 0.8470 & 0.8271 \\
+\texttt{(16, 8)} & 0.0 & 0.8547 & 0.8367 \\
+\texttt{(8,)}    & 0.1 & \best{0.8623} & \best{0.8552} \\
+\texttt{(16, 8)} & 0.1 & 0.5467 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Learning Curves}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{credit_dt_rf_sweep.png}
+  \caption{Credit Approval: Decision Tree and Random Forest hyperparameter sweeps.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{credit_nn_config_sweep.png}
+    \caption{Neural Network: Accuracy and F1 by configuration}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{credit_nn_learning_curve.png}
+    \caption{Neural Network: Cost vs training set size}
+  \end{subfigure}
+  \caption{Credit Approval: Neural Network configuration and learning curves.}
+\end{figure}
+
+Random Forest gave the strongest Credit Approval result, with \textit{ntree}=30 producing
+0.8728 accuracy and 0.8637 F1. The single Decision Tree was close when kept shallow:
+depth 2 reached 0.8636 accuracy and 0.8627 F1, but deeper trees declined. That pattern
+suggests that the dataset has a few strong approval rules, while deeper splits begin to
+memorize smaller subgroups. The Random Forest improved over a single tree by averaging
+many bootstrapped trees, which helped stabilize predictions on this mixed-feature dataset.
+The Neural Network was competitive but slightly behind the forest. The best network used
+one hidden layer of 8 units with $\lambda=0.1$, reaching 0.8623 accuracy and 0.8552 F1.
+The larger regularized architecture collapsed to an F1 of 0.0000, which likely means it
+predicted mostly one class under that setting. For this dataset, the tree-based models
+were a better fit than the deeper neural-network configurations.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Summary of Results}
@@ -352,7 +507,8 @@ To be completed by Akshit.
 \centering
 \caption{Best performance (Accuracy / F1-Score) per algorithm per dataset.
   Gray cells indicate the highest value for each metric on each dataset.}
-\small
+\scriptsize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{l cc cc cc cc}
 \toprule
  & \multicolumn{2}{c}{\textbf{Digits}} & \multicolumn{2}{c}{\textbf{Parkinson's}}
@@ -360,10 +516,11 @@ To be completed by Akshit.
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
 \textbf{Algorithm} & Acc & F1 & Acc & F1 & Acc & F1 & Acc & F1 \\
 \midrule
-k-NN            & \best{0.9883} & \best{0.9883} & \best{0.9544} & \best{0.9676} & -- & -- & -- & -- \\
+k-NN            & \best{0.9883} & \best{0.9883} & \best{0.9544} & \best{0.9676} & \best{0.9249} & \best{0.9345} & -- & -- \\
+Decision Tree   & -- & -- & -- & -- & 0.9247 & 0.9337 & 0.8636 & 0.8627 \\
 Naive Bayes     & -- & -- & 0.7171 & 0.7695 & -- & -- & -- & -- \\
-Random Forest   & 0.9749 & 0.9748 & 0.9014 & 0.9376 & -- & -- & -- & -- \\
-Neural Network  & 0.9800 & 0.9799 & 0.8378 & 0.8968 & -- & -- & -- & -- \\
+Random Forest   & 0.9749 & 0.9748 & 0.9014 & 0.9376 & -- & -- & \best{0.8728} & \best{0.8637} \\
+Neural Network  & 0.9800 & 0.9799 & 0.8378 & 0.8968 & -- & -- & 0.8623 & 0.8552 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -372,24 +529,25 @@ Neural Network  & 0.9800 & 0.9799 & 0.8378 & 0.8968 & -- & -- & -- & -- \\
 \section{Discussion}
 % ─────────────────────────────────────────────────────────────────────────────
 
-Across the first two datasets, k-NN was the strongest method. This is notable because it
-is also the simplest model tested. For Digits, the normalized 64-dimensional pixel vectors
-appear to preserve strong local neighborhoods by class. For Parkinson's, the best value
-was $k=1$, which suggests that the strongest signal is concentrated in very near neighbors
-rather than broad averaged neighborhoods.
+Across the four main datasets, no single model dominated every setting, but the patterns
+were consistent with the structure of the data. k-NN was strongest on Digits, Parkinson's,
+and Rice. Those datasets all have numerical feature spaces where distance is meaningful
+after normalization. Digits and Rice especially show that local neighborhoods carry strong
+class information.
 
-Random Forests performed well on both datasets but did not beat k-NN. On Digits, the
-forest improved as \textit{ntree} increased, but it still had to represent image patterns
-through axis-aligned splits on individual pixels. On Parkinson's, the forest was useful
-for nonlinear thresholds but showed some variance across tree counts, likely because the
-dataset has only 195 instances.
+Tree-based methods were strongest on Credit Approval. That dataset mixes categorical and
+numerical features, and the approval label appears to depend on a small set of rule-like
+conditions. A shallow Decision Tree already performed well, and the Random Forest improved
+slightly by averaging several bootstrapped trees. In contrast, deeper single trees became
+worse on both Rice and Credit, which points to overfitting rather than underfitting.
 
-The Neural Network was competitive on Digits but weaker on Parkinson's. The larger Digits
-dataset gives the network enough examples to learn useful hidden representations. The
-Parkinson's dataset is much smaller, so deeper networks did not help and likely added
-unnecessary capacity. Naive Bayes was only evaluated on Parkinson's and performed worst,
-which is consistent with correlated biomedical voice measurements violating the model's
-conditional-independence assumption.
+The Neural Network was competitive when there were enough examples and a useful continuous
+feature representation, especially on Digits. It was weaker on Parkinson's and Credit.
+For Parkinson's, the dataset is very small, so deeper networks add capacity without much
+data to support it. For Credit, the one-hot feature representation is sparse and the
+tree-based models fit the rule-like structure more naturally. Naive Bayes was the weakest
+model where it was tested, which is reasonable because the Parkinson's voice measurements
+are likely correlated and violate the model's conditional-independence assumption.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{\textcolor{red}{Extra Credit}}
@@ -398,7 +556,7 @@ conditional-independence assumption.
 \subsection*{\textcolor{red}{[EC\#2] Image Classification on Olivetti Faces}}
 
 \textcolor{red}{To satisfy the EC\#2 criterion of selecting a new \emph{challenging}
-dataset, I evaluated my k-NN (HW1) and Neural Network (HW4) implementations on the
+dataset, we evaluated our k-NN (HW1) and Neural Network (HW4) implementations on the
 \textbf{Olivetti Faces} dataset --- 400 grayscale 64x64 images of 40 distinct subjects
 (10 images per subject), loaded with a \texttt{scikit-learn} dataset fetcher.
 This is an image classification task with 40 classes, far more than any of the four
