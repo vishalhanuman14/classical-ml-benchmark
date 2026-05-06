@@ -1,9 +1,9 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{booktabs}
-\usepackage{colortbl}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\graphicspath{{../results/}{results/}}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{caption}
@@ -11,7 +11,7 @@
 \usepackage{float}
 
 \definecolor{bestgray}{gray}{0.8}
-\newcommand{\best}[1]{\cellcolor{bestgray}\textbf{#1}}
+\newcommand{\best}[1]{\colorbox{bestgray}{\strut\textbf{#1}}}
 
 \title{COMPSCI 589 -- Final Project\\[0.5em]
        \large Benchmarking Classical ML Algorithms on Four Datasets}
@@ -36,11 +36,10 @@ No machine learning libraries (e.g., scikit-learn, PyTorch) were used for traini
 
 \begin{itemize}
   \item \textbf{Datasets 1--2} (Digits, Parkinson's):
-        k-NN and Random Forest implementations by \textbf{Vishal Hanuman} (HW1, HW3).
-        Gaussian Naive Bayes by \textbf{Vishal Hanuman} (adapted from HW2).
+        k-NN, Gaussian Naive Bayes, Random Forest, and Neural Network implementations
+        by \textbf{Vishal Hanuman} (HW1--HW4).
   \item \textbf{Datasets 3--4} (Rice, Credit Approval):
         Implementations by \textbf{Akshit [Last Name]} (HW\textit{X}).
-        % TODO: fill in
 \end{itemize}
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -57,7 +56,7 @@ cross-validation, with systematic hyperparameter tuning.
 
 \begin{enumerate}
   \item \textbf{Digits} -- 1,797 instances, 64 numerical features, 10 classes (0--9).
-        Loaded via \texttt{sklearn.datasets.load\_digits}.
+        Loaded using the Digits loader from \texttt{scikit-learn}.
   \item \textbf{Parkinson's Disease} -- 195 instances, 22 numerical features, binary
         (0 = healthy, 1 = Parkinson's).
   \item \textbf{Rice Grains} -- 3,810 instances, 7 numerical features, binary
@@ -72,48 +71,276 @@ cross-validation, with systematic hyperparameter tuning.
 
 \subsection{Dataset 1 -- Hand-Written Digits}
 
-% TODO: describe algorithm choices and rationale
+For the Digits dataset, I evaluated k-NN, Random Forest, and a Neural Network.
+All features are numerical pixel intensities, so no feature encoding was required.
+k-NN is a natural baseline because digits with similar pixel layouts should be close in
+the normalized feature space. Random Forests were tested because they can learn nonlinear
+decision rules over pixel thresholds, while the Neural Network was included because it can
+combine many pixel-level signals through hidden units. All results below use stratified
+10-fold cross-validation and report accuracy and macro F1-score.
 
 \subsubsection*{k-NN Hyperparameter Sweep}
 
-% TODO: insert hyperparameter table
+\begin{table}[H]
+\centering
+\caption{Digits: k-NN performance for different values of $k$.}
+\begin{tabular}{rcc}
+\toprule
+$k$ & Accuracy & Macro F1 \\
+\midrule
+1  & 0.9872 & 0.9871 \\
+3  & 0.9872 & 0.9872 \\
+5  & \best{0.9883} & \best{0.9883} \\
+7  & 0.9861 & 0.9861 \\
+11 & 0.9794 & 0.9793 \\
+15 & 0.9806 & 0.9805 \\
+21 & 0.9745 & 0.9743 \\
+31 & 0.9677 & 0.9674 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsubsection*{Random Forest Hyperparameter Sweep}
 
-% TODO: insert hyperparameter table
+\begin{table}[H]
+\centering
+\caption{Digits: Random Forest performance for different values of \textit{ntree}.}
+\begin{tabular}{rcc}
+\toprule
+\textit{ntree} & Accuracy & Macro F1 \\
+\midrule
+5   & 0.8965 & 0.8957 \\
+10  & 0.9377 & 0.9373 \\
+20  & 0.9605 & 0.9604 \\
+30  & 0.9621 & 0.9620 \\
+50  & 0.9694 & 0.9695 \\
+75  & 0.9716 & 0.9718 \\
+100 & 0.9660 & 0.9660 \\
+150 & \best{0.9749} & \best{0.9748} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Neural Network Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Digits: Neural Network performance for selected architectures and regularization values.}
+\begin{tabular}{lccc}
+\toprule
+Hidden layers & $\lambda$ & Accuracy & Macro F1 \\
+\midrule
+\texttt{(32,)}     & 0.0 & 0.9800 & 0.9798 \\
+\texttt{(64,)}     & 0.0 & \best{0.9800} & \best{0.9799} \\
+\texttt{(32, 16)}  & 0.0 & 0.9756 & 0.9755 \\
+\texttt{(64, 32)}  & 0.0 & 0.9761 & 0.9761 \\
+\texttt{(32,)}     & 0.1 & 0.9544 & 0.9542 \\
+\texttt{(64, 32)}  & 0.1 & 0.9538 & 0.9536 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsubsection*{Learning Curves}
 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../results/digits_knn_k_sweep.png}
+    \includegraphics[width=\textwidth]{digits_knn_k_sweep.png}
     \caption{k-NN: Accuracy and F1 vs $k$}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../results/digits_rf_ntree_sweep.png}
+    \includegraphics[width=\textwidth]{digits_rf_ntree_sweep.png}
     \caption{Random Forest: Accuracy and F1 vs \textit{ntree}}
   \end{subfigure}
-  \caption{Learning curves for Dataset 1 (Digits).}
+  \caption{Hyperparameter curves for Dataset 1 (Digits).}
 \end{figure}
 
-% TODO: brief interpretation
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{digits_nn_config_sweep.png}
+    \caption{Neural Network: Accuracy and F1 by configuration}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{digits_nn_learning_curve.png}
+    \caption{Neural Network: Cost vs training set size}
+  \end{subfigure}
+  \caption{Neural Network graphs for Dataset 1 (Digits).}
+\end{figure}
+
+k-NN achieved the best Digits performance, with $k=5$ producing 0.9883 accuracy and
+0.9883 macro F1. Very small values of $k$ already worked well, which suggests that the
+normalized pixel space has strong local class structure. Performance declined as $k$
+became larger, likely because broad neighborhoods smooth over class boundaries between
+visually similar digits.
+
+Random Forest performance improved substantially as the number of trees increased, but it
+remained below k-NN and the Neural Network. This is reasonable for image-like data: an
+axis-aligned tree split only sees one pixel feature at a time, so the forest needs many
+trees to approximate spatial digit patterns. The Neural Network performed strongly, with
+the best setting at one hidden layer of 64 units and no regularization. Adding
+regularization with $\lambda=0.1$ reduced performance, which indicates that these small
+networks were more likely underfitting than overfitting in this experiment. The learning
+curve decreased as more training examples were used and then began to flatten, suggesting
+that the selected network was converging but had less advantage over the simpler k-NN
+classifier on this dataset.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 2 -- Parkinson's Disease}
 
-% TODO: same structure as Dataset 1
+For the Parkinson's dataset, I evaluated k-NN, Gaussian Naive Bayes, Random Forest, and a
+Neural Network. The dataset contains 22 numerical voice-measurement features and a binary
+target variable, \texttt{Diagnosis}. k-NN tests whether nearby voice measurements identify
+similar diagnoses. Naive Bayes provides a simple probabilistic baseline, Random Forests
+capture nonlinear feature thresholds, and the Neural Network tests whether a learned
+nonlinear representation improves performance. The F1-score reported here is the F1-score
+for the positive Parkinson's class.
+
+\subsubsection*{k-NN Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Parkinson's: k-NN performance for different values of $k$.}
+\begin{tabular}{rcc}
+\toprule
+$k$ & Accuracy & F1 \\
+\midrule
+1  & \best{0.9544} & \best{0.9676} \\
+3  & 0.9278 & 0.9530 \\
+5  & 0.9278 & 0.9528 \\
+7  & 0.9325 & 0.9565 \\
+11 & 0.8917 & 0.9319 \\
+15 & 0.8420 & 0.9034 \\
+21 & 0.8373 & 0.9028 \\
+31 & 0.8403 & 0.9047 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Gaussian Naive Bayes Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Parkinson's: Gaussian Naive Bayes performance for different variance floors.}
+\begin{tabular}{lcc}
+\toprule
+$\epsilon$ & Accuracy & F1 \\
+\midrule
+\texttt{1e-9} & 0.6915 & 0.7423 \\
+\texttt{1e-7} & 0.6968 & 0.7479 \\
+\texttt{1e-5} & 0.6979 & 0.7504 \\
+\texttt{0.001} & 0.6929 & 0.7497 \\
+\texttt{0.01} & 0.7129 & 0.7651 \\
+\texttt{0.1} & \best{0.7171} & \best{0.7695} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Random Forest Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Parkinson's: Random Forest performance for different values of \textit{ntree}.}
+\begin{tabular}{rcc}
+\toprule
+\textit{ntree} & Accuracy & F1 \\
+\midrule
+5   & 0.8554 & 0.9055 \\
+10  & 0.8817 & 0.9245 \\
+20  & \best{0.9014} & \best{0.9376} \\
+30  & 0.8878 & 0.9286 \\
+50  & 0.8920 & 0.9327 \\
+75  & 0.8823 & 0.9250 \\
+100 & 0.8928 & 0.9324 \\
+150 & 0.8911 & 0.9311 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Neural Network Hyperparameter Sweep}
+
+\begin{table}[H]
+\centering
+\caption{Parkinson's: Neural Network performance for selected architectures and regularization values.}
+\begin{tabular}{lccc}
+\toprule
+Hidden layers & $\lambda$ & Accuracy & F1 \\
+\midrule
+\texttt{(8,)}    & 0.0 & 0.8323 & 0.8920 \\
+\texttt{(16,)}   & 0.0 & \best{0.8378} & \best{0.8968} \\
+\texttt{(8, 4)}  & 0.0 & 0.7648 & 0.8652 \\
+\texttt{(16, 8)} & 0.0 & 0.7659 & 0.8627 \\
+\texttt{(8,)}    & 0.1 & 0.8303 & 0.8966 \\
+\texttt{(16, 8)} & 0.1 & 0.7542 & 0.8598 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Learning Curves}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{parkinsons_knn_k_sweep.png}
+    \caption{k-NN: Accuracy and F1 vs $k$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{parkinsons_nb_epsilon_sweep.png}
+    \caption{Naive Bayes: Accuracy and F1 vs $\epsilon$}
+  \end{subfigure}
+  \caption{Hyperparameter curves for k-NN and Naive Bayes on Dataset 2.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{parkinsons_rf_ntree_sweep.png}
+    \caption{Random Forest: Accuracy and F1 vs \textit{ntree}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{parkinsons_nn_config_sweep.png}
+    \caption{Neural Network: Accuracy and F1 by configuration}
+  \end{subfigure}
+  \caption{Random Forest and Neural Network configuration curves for Dataset 2.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.62\textwidth]{parkinsons_nn_learning_curve.png}
+  \caption{Neural Network learning curve for Dataset 2.}
+\end{figure}
+
+k-NN achieved the best Parkinson's performance, with $k=1$ producing 0.9544 accuracy and
+0.9676 F1. Larger values of $k$ reduced performance, which suggests that the most useful
+signal is very local in the normalized voice-feature space. Because the dataset is small
+and imbalanced toward the positive class, larger neighborhoods likely mix less similar
+patients and smooth away useful diagnostic differences.
+
+Gaussian Naive Bayes was the weakest model. The voice measurements are likely correlated
+with each other, while Naive Bayes assumes conditional independence given the class. The
+epsilon sweep shows that increasing the variance floor helped slightly, but it did not
+close the gap to the other methods. Random Forest was the second-best method: it handled
+nonlinear feature thresholds better than Naive Bayes, but performance peaked at 20 trees
+and then varied slightly, which is consistent with the higher variance expected from
+bootstrap training on only 195 instances. The Neural Network trailed k-NN and Random
+Forest; the deeper architectures were worse, suggesting that the dataset is too small for
+the added capacity. Its learning curve generally decreased as more training instances were
+used, but the curve was not perfectly smooth because the train/test split is small and
+the training procedure is stochastic.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 3 -- Rice Grains}
 
-% TODO
+To be completed by Akshit.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \subsection{Dataset 4 -- Credit Approval}
 
-% TODO
+To be completed by Akshit.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Summary of Results}
@@ -133,10 +360,10 @@ cross-validation, with systematic hyperparameter tuning.
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
 \textbf{Algorithm} & Acc & F1 & Acc & F1 & Acc & F1 & Acc & F1 \\
 \midrule
-k-NN            & -- & -- & -- & -- & -- & -- & -- & -- \\
-Naive Bayes     & -- & -- & -- & -- & -- & -- & -- & -- \\
-Random Forest   & -- & -- & -- & -- & -- & -- & -- & -- \\
-% Add rows for Akshit's algorithms
+k-NN            & \best{0.9883} & \best{0.9883} & \best{0.9544} & \best{0.9676} & -- & -- & -- & -- \\
+Naive Bayes     & -- & -- & 0.7171 & 0.7695 & -- & -- & -- & -- \\
+Random Forest   & 0.9749 & 0.9748 & 0.9014 & 0.9376 & -- & -- & -- & -- \\
+Neural Network  & 0.9800 & 0.9799 & 0.8378 & 0.8968 & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -145,8 +372,24 @@ Random Forest   & -- & -- & -- & -- & -- & -- & -- & -- \\
 \section{Discussion}
 % ─────────────────────────────────────────────────────────────────────────────
 
-% TODO: discuss why certain algorithms perform better on certain datasets,
-%       convergence behavior, effect of feature types, etc.
+Across the first two datasets, k-NN was the strongest method. This is notable because it
+is also the simplest model tested. For Digits, the normalized 64-dimensional pixel vectors
+appear to preserve strong local neighborhoods by class. For Parkinson's, the best value
+was $k=1$, which suggests that the strongest signal is concentrated in very near neighbors
+rather than broad averaged neighborhoods.
+
+Random Forests performed well on both datasets but did not beat k-NN. On Digits, the
+forest improved as \textit{ntree} increased, but it still had to represent image patterns
+through axis-aligned splits on individual pixels. On Parkinson's, the forest was useful
+for nonlinear thresholds but showed some variance across tree counts, likely because the
+dataset has only 195 instances.
+
+The Neural Network was competitive on Digits but weaker on Parkinson's. The larger Digits
+dataset gives the network enough examples to learn useful hidden representations. The
+Parkinson's dataset is much smaller, so deeper networks did not help and likely added
+unnecessary capacity. Naive Bayes was only evaluated on Parkinson's and performed worst,
+which is consistent with correlated biomedical voice measurements violating the model's
+conditional-independence assumption.
 
 % ─────────────────────────────────────────────────────────────────────────────
 % Extra Credit (uncomment and complete if applicable)

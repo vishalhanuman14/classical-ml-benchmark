@@ -17,6 +17,7 @@ Thumbs.db
 # Results (generated at runtime)
 results/*.png
 results/*.pdf
+notebooks/results/
 
 # Report build artifacts
 report/*.aux
