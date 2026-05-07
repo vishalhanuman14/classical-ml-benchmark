@@ -19,8 +19,8 @@ class GaussianNaiveBayes:
             mask = y_train == c
             self.priors[c] = np.sum(mask) / n
             self.means[c] = np.mean(X_train[mask], axis=0)
-            # 1e-9 smoothing prevents division by zero if a feature has zero variance
-            self.stds[c]  = np.std(X_train[mask], axis=0) + 1e-9
+            # Add the dynamic epsilon instead of a hardcoded 1e-9
+            self.stds[c]  = np.std(X_train[mask], axis=0) + self.epsilon
             
         return self
 
