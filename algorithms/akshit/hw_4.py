@@ -2,7 +2,7 @@
 # # Dataset 4 – Credit Approval
 # **Implementation:** Akshith Karthik (algorithms/akshit/)
 # **Algorithms:** Decision Tree and Random Forest
-# **Note:** Mixed features — use `utils.one_hot_encode` for categorical columns  
+# **Note:** Mixed features — use `utils.one_hot_encode` for categorical columns
 # **Evaluation:** Stratified 10-fold CV · Accuracy · Macro F1
 
 # %%
