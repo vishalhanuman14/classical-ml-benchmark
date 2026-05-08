@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Dataset 4 – Credit Approval
-# **Implementation:** Akshit (algorithms/akshit/)  
-# **Algorithms:** TBD  
+# **Implementation:** Akshith Karthik (algorithms/akshit/)
+# **Algorithms:** Decision Tree and Random Forest
 # **Note:** Mixed features — use `utils.one_hot_encode` for categorical columns  
 # **Evaluation:** Stratified 10-fold CV · Accuracy · Macro F1
 
@@ -65,11 +65,11 @@ print(f"Instances: {len(y)}, Features (after encoding): {X_raw.shape[1]}")
 print(f"Classes: {dict(zip(*np.unique(y, return_counts=True)))}")
 
 # %% [markdown]
-# ## TODO: Algorithm 1 – Hyperparameter Sweep
+# ## Algorithm 1: Decision Tree Hyperparameter Sweep
 
 # %%
 # --- Algorithm 1 Sweep: Decision Tree ---
-depth_values = [2, 4, 6, 8, 10, 15]
+depth_values = [2, 4, 6, 8, 10, 12]
 dt_results = {'max_depth': [], 'accuracy': [], 'f1': []}
 
 print("Running 10-Fold CV for Decision Tree...")
@@ -98,11 +98,11 @@ for depth in depth_values:
     print(f"max_depth={depth:<2} | Acc: {np.mean(acc_list):.4f} | F1: {np.mean(f1_list):.4f}")
 
 # %% [markdown]
-# ## TODO: Algorithm 2 – Hyperparameter Sweep
+# ## Algorithm 2: Random Forest Hyperparameter Sweep
 
 # %%
 # --- Algorithm 2 Sweep: Random Forest ---
-ntree_values = [1, 5, 10, 20, 30]
+ntree_values = [1, 5, 10, 15, 20, 25]
 rf_results = {'ntree': [], 'accuracy': [], 'f1': []}
 
 print("Running 10-Fold CV for Random Forest...")
@@ -130,7 +130,7 @@ for ntree in ntree_values:
     print(f"ntree={ntree:<2} | Acc: {np.mean(acc_list):.4f} | F1: {np.mean(f1_list):.4f}")
 
 # %% [markdown]
-# ## TODO: Plots & Summary Table
+# ## Plots and Summary Table
 
 # %%
 # --- Plotting Learning Curves ---
@@ -155,6 +155,7 @@ axes[1].legend()
 axes[1].grid(True)
 
 plt.tight_layout()
+plt.savefig('results/credit_dt_rf_sweep.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # --- Summary Table ---
@@ -166,5 +167,3 @@ print(df_dt.to_string(index=False))
 print("\nRandom Forest Results:")
 df_rf = pd.DataFrame(rf_results)
 print(df_rf.to_string(index=False))
-
-

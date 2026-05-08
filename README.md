@@ -22,7 +22,7 @@ Benchmarking from-scratch ML algorithm implementations across four datasets as p
 | Gaussian Naive Bayes | HW2 (adapted) | Vishal |
 | Random Forest | HW3 | Vishal |
 | Neural Network | HW4 | Vishal |
-| *(Akshit's algorithms)* | HW? | Akshit |
+| k-Nearest Neighbors, Decision Tree, Gaussian Naive Bayes, Random Forest | HW1-HW3 | Akshith Karthik |
 
 ## Project Structure
 
@@ -35,7 +35,7 @@ classical-ml-benchmark/
 │   │   ├── naive_bayes.py
 │   │   ├── random_forest.py
 │   │   └── utils.py    # stratified CV, metrics, normalization
-│   └── akshit/         # Akshit's implementations
+│   └── akshit/         # Akshith's implementations
 ├── data/               # parkinsons.csv, rice.csv, credit_approval.csv
 ├── notebooks/          # one Colab-ready notebook per dataset
 ├── report/             # LaTeX source
@@ -88,10 +88,15 @@ Vishal-owned notebooks:
 ## Evaluation Protocol
 
 - **Cross-validation:** Stratified 10-fold
-- **Metrics:** Accuracy + Macro F1-Score
+- **Metrics:** Accuracy + F1-score
 - **Hyperparameters:** ≥6 settings evaluated per algorithm per dataset
+
+## Extra Credit
+
+- **EC#1:** More than two algorithms evaluated on each of the four required datasets.
+- **EC#2:** Olivetti Faces image-classification dataset evaluated with k-NN and Neural Network.
 
 ## Contributors
 
 - Vishal Hanuman — Datasets 1 & 2
-- Akshit — Datasets 3 & 4
+- Akshith Karthik — Datasets 3 & 4

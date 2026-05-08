@@ -28,3 +28,7 @@ report/*.synctex.gz
 report/*.fls
 report/*.fdb_latexmk
 report/_minted*/
+
+# Local study guide artifacts
+report/algorithm_guide.pdf
+report/algorithm_guide.tex
