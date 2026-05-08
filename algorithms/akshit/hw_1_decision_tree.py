@@ -33,7 +33,7 @@ class DecisionTree:
             return self._majority(y)
 
         best_gain, best_feat, best_thresh = -1, None, None
-        
+
         # Optimized split search
         for f in feature_indices:
             col = X[:, f].astype(float)
@@ -74,11 +74,11 @@ class DecisionTree:
     def _predict_one(self, node, x):
         if not isinstance(node, dict):
             return node
-        
+
         f = node['feature']
         key = '<=' if float(x[f]) <= node['threshold'] else '>'
         child = node['children'].get(key)
-        
+
         if child is None:
             return node['majority']
         return self._predict_one(child, x)

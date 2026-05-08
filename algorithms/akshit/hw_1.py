@@ -1,10 +1,29 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.utils import shuffle
-from sklearn.model_selection import train_test_split
 from collections import Counter
 import math
+
+
+def shuffle(X, y, random_state=None):
+    """Shuffle X and y together without relying on sklearn utilities."""
+    rng = np.random.default_rng(random_state)
+    idx = np.arange(len(X))
+    rng.shuffle(idx)
+    return np.asarray(X)[idx], np.asarray(y)[idx]
+
+
+def train_test_split(X, y, test_size=0.2, random_state=None):
+    """Small local replacement for the HW1 experiment driver."""
+    X = np.asarray(X)
+    y = np.asarray(y)
+    rng = np.random.default_rng(random_state)
+    idx = np.arange(len(X))
+    rng.shuffle(idx)
+    n_test = int(np.ceil(len(X) * test_size))
+    test_idx = idx[:n_test]
+    train_idx = idx[n_test:]
+    return X[train_idx], X[test_idx], y[train_idx], y[test_idx]
 
 
 # %%
@@ -321,6 +340,5 @@ if __name__ == '__main__':
         "Accuracy", "fig_dt_pruned_test.png")
 
     print("\nAll experiments complete.")
-
 
 
